@@ -6,8 +6,8 @@ import sys
 sys.path.append("src")
 import Mat
 import Lexer
-import Parser
-import Interpreter
+from Parser import Parser
+from Interpreter import Interpreter
 
 def printAST(ast, indent):
     print "| " * indent + str(ast[1])
@@ -28,12 +28,14 @@ if len(sys.argv) > 1:
 else:
     stream = raw_input("Vec> ")
 
+interpreter = Interpreter()
+parser = Parser()
+
 print "Input: " + stream
 lexemes = Lexer.lex(stream)
 print "Lexemes: " + str(lexemes)
-parser = Parser.Parser()
 ast = parser.parse(lexemes)
 print "AST:"
 printAST(ast, 0)
-
-inter = Interpreter.Interpreter()
+result = interpreter.eval(ast)
+print "Result: " + str(result)
