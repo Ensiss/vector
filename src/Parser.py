@@ -26,8 +26,9 @@ class Parser:
         return self.ast
 
     def ruleAssign(self):
-        nname, nval = self.lex[0]
-        if self.accept("LX_ID") and nname[3:] in self.assign:
+        if self.lex:
+            nname, nval = self.lex[0]
+        if self.lex and self.accept("LX_ID") and nname[3:] in self.assign:
             node = (nname, nval, [])
             node[2].append((self.lname, self.lval))
             self.shift(); self.shift()

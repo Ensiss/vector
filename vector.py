@@ -7,6 +7,7 @@ sys.path.append("src")
 import Mat
 import Lexer
 import Parser
+import Interpreter
 
 def printAST(ast, indent):
     print "| " * indent + str(ast[1])
@@ -34,3 +35,5 @@ parser = Parser.Parser()
 ast = parser.parse(lexemes)
 print "AST:"
 printAST(ast, 0)
+
+inter = Interpreter.Interpreter()
