@@ -5,6 +5,9 @@ class Interpreter:
         self.pushScope()
 
     def eval(self, ast):
+        if ast == False:
+            print "Error: can't eval this expression"
+            return False
         if ast[0] in ["LX_NUMBER", "LX_STRING"]:
             return ast[1]
         if ast[0] == "LX_ID":

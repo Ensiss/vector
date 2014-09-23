@@ -20,5 +20,9 @@ if len(sys.argv) > 1:
         vec.eval(stream)
 else:
     while True:
-        stream = raw_input("Vec> ")
+        try:
+            stream = raw_input("Vec> ")
+        except:
+            print "exit()"
+            exit()
         vec.eval(stream)
