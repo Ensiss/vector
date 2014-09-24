@@ -10,7 +10,7 @@ class Parser:
             {"lx":"LX_XOR"},
             {"lx":"LX_AND"},
             {"lx":["LX_EQ", "LX_NEQ"]},
-            {"lx":["LX_LE", "LX_LT", "LX_GE", "LX_GT"]},
+            {"lx":["LX_LE", "LX_LT"]},# , "LX_GE", "LX_GT"
             {"lx":["LX_LSHIFT", "LX_RSHIFT"]},
             {"lx":["LX_PLUS", "LX_MINUS"]},
             {"lx":["LX_MULT", "LX_DIV", "LX_MODULO"]},
@@ -97,6 +97,20 @@ class Parser:
             self.shift()
             node = self.ruleAssign()
             if self.expect("LX_RPAREN"):
+                self.shift()
+        elif self.accept("LX_LT"):
+            node = ("LX_VECTOR", "<>", [])
+            self.shift()
+            if not self.expect("LX_NUMBER"):
+                return False
+            node[2].append((self.lname, int(self.lval)))
+            self.shift()
+            while self.accept("LX_COMMA"):
+                self.shift()
+                if self.expect("LX_NUMBER"):
+                    node[2].append((self.lname, int(self.lval)))
+                    self.shift()
+            if self.expect("LX_GT"):
                 self.shift()
         else:
             return False

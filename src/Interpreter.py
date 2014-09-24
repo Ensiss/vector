@@ -1,3 +1,5 @@
+from Mat import Mat
+
 class Interpreter:
     def __init__(self):
         self.scopes = []
@@ -10,6 +12,10 @@ class Interpreter:
             return False
         if ast[0] in ["LX_NUMBER", "LX_STRING"]:
             return ast[1]
+        if ast[0] == "LX_VECTOR":
+            if len(ast[2]) > 1:
+                return Mat(self.eval(ast[2][0]), self.eval(ast[2][1]))
+            return Mat(self.eval(ast[2][0]))
         if ast[0] == "LX_ID":
             return self.getValue(ast[1])
         return self.call(ast[0], ast[2])
