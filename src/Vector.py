@@ -25,6 +25,9 @@ class Vector:
         print str(result)
 
     def printAST(self, ast, indent):
+        if ast == False:
+            print "| " * indent + "ERROR"
+            return
         print "| " * indent + str(ast[1])
         if len(ast) < 3:
             return
