@@ -13,12 +13,26 @@ class Interpreter:
         if ast[0] in ["LX_NUMBER", "LX_STRING"]:
             return ast[1]
         if ast[0] == "LX_VECTOR":
-            if len(ast[2]) > 1:
-                return Mat(self.eval(ast[2][0]), self.eval(ast[2][1]))
-            return Mat(self.eval(ast[2][0]))
+            mat = Mat(self.eval(ast[2][0]), self.eval(ast[2][1]) if len(ast[2]) == 4 else 1)
+            self.initVector(mat, ast[2][-2][2], ast[2][-1][2])
+            return mat
         if ast[0] == "LX_ID":
             return self.getValue(ast[1])
         return self.call(ast[0], ast[2])
+
+    def initVector(self, m, ids, init):
+        self.pushScope()
+        for y in range(m.height):
+            for x in range(m.width):
+                if len(ids) and ids[0]:
+                    self.setValue(ids[0][2][0][1], y)
+                if len(ids) > 1 and ids[1]:
+                    self.setValue(ids[1][2][0][1], x)
+                for expr in init:
+                    if expr[2][0][1] == "_" or self.eval(expr[2][0]):
+                        m.set(x, y, self.eval(expr[2][1]))
+                        break
+        self.popScope()
 
     def call(self, func, arg):
         if func[:3] != "LX_":

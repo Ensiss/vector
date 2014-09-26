@@ -2,9 +2,9 @@ from compiler.ast import flatten
 
 class Mat:
     def __init__(self, height, width = 1):
-        self.width = width
-        self.height = height
-        self.data = [[0 for x in range(width)] for y in range(height)]
+        self.width = int(width)
+        self.height = int(height)
+        self.data = [[0 for x in range(self.width)] for y in range(self.height)]
         self.type = "Mat"
 
     def __str__(self):

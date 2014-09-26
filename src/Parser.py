@@ -21,6 +21,7 @@ class Parser:
     def parse(self, lex):
         self.err = False
         self.lex = lex
+        self.mbuffer = []
         self.shift()
         self.ast = self.ruleAssign()
         return self.ast
@@ -99,22 +100,66 @@ class Parser:
             if self.expect("LX_RPAREN"):
                 self.shift()
         elif self.accept("LX_LBRACKET"):
-            node = ("LX_VECTOR", "<>", [])
+            node = ("LX_VECTOR", "[]", [])
             self.shift()
-            if not self.expect("LX_NUMBER"):
+            self.mbuffer.append([])
+            tmp = self.ruleVecDimension()
+            if not tmp:
                 return False
-            node[2].append((self.lname, int(self.lval)))
-            self.shift()
-            while self.accept("LX_COMMA"):
+            node[2].append(tmp)
+            if self.accept("LX_COMMA"):
                 self.shift()
-                if self.expect("LX_NUMBER"):
-                    node[2].append((self.lname, int(self.lval)))
-                    self.shift()
+                tmp = self.ruleVecDimension()
+                if not tmp:
+                    return False
+                node[2].append(tmp)
             if self.expect("LX_RBRACKET"):
                 self.shift()
+            node[2].append(("LX_LOOPS", "->", self.mbuffer.pop()))
+            init = ("LX_INIT", ":", [])
+            if self.accept("LX_COLON"):
+                self.shift()
+                tmp = self.ruleInit()
+                if not tmp:
+                    return False
+                init[2].append(tmp)
+                while self.accept("LX_COMMA"):
+                    self.shift()
+                    tmp = self.ruleInit()
+                    if not tmp:
+                        return False
+                    init[2].append(tmp)
+            node[2].append(init)
         else:
             return False
         return node
+
+    def ruleInit(self):
+        node = ("LX_ASSIGN", "->", [])
+        if self.lval == "_":
+            node[2].append(("LX_ANY", "_"))
+            self.shift()
+        else:
+            tmp = self.ruleAssign()
+            if not tmp:
+                return False
+            node[2].append(tmp)
+        if self.expect("LX_RARROW"):
+            self.shift()
+        tmp = self.ruleAssign()
+        if not tmp:
+            return False
+        node[2].append(tmp)
+        return node
+
+    def ruleVecDimension(self):
+        node = False
+        if self.lex and self.lex[0][0] == "LX_RARROW":
+            if self.expect("LX_ID"):
+                node = ("LX_RARROW", "->", [(self.lname, self.lval)])
+            self.shift(); self.shift()
+        self.mbuffer[-1].append(node)
+        return self.ruleAssign()
 
     def accept(self, lx):
         if not self.lname:
