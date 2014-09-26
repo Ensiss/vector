@@ -20,7 +20,7 @@ class Mat:
                     s += ' '
                 line += ' ' + s
             line += " |\n"
-        return line
+        return line[:-1]
 
     def get(self, x, y):
         return self.data[y][x]
