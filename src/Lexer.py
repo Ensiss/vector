@@ -32,6 +32,10 @@ lexlist = [
     ("LX_LAND", '&&'),
     ("LX_LOR", '\\|\\|'),
 
+    # Special
+    ("LX_RARROW", "->"),
+    ("LX_LARROW", "<-"),
+
     # Special assign
     ("LX_PLUSSET", '\\+='),
     ("LX_MINUSSET", '-='),
