@@ -81,5 +81,18 @@ class Interpreter:
     def func_POW(self, c):
         return self.eval(c[0]) ** self.eval(c[1])
 
+    def func_EQ(self, c):
+        return int(self.eval(c[0]) == self.eval(c[1]))
+    def func_NEQ(self, c):
+        return int(self.eval(c[0]) != self.eval(c[1]))
+    def func_LT(self, c):
+        return int(self.eval(c[0]) < self.eval(c[1]))
+    def func_LE(self, c):
+        return int(self.eval(c[0]) <= self.eval(c[1]))
+    def func_GT(self, c):
+        return int(self.eval(c[0]) > self.eval(c[1]))
+    def func_GE(self, c):
+        return int(self.eval(c[0]) >= self.eval(c[1]))
+
     def func_ASSIGN(self, c):
         return self.setValue(c[0][1], self.eval(c[1]))
