@@ -5,7 +5,12 @@ import sys
 sys.path.append("src")
 from Vector import Vector
 
-vec = Vector()
+debug = False
+if "--debug" in sys.argv:
+    debug = True
+    sys.argv.pop(sys.argv.index("--debug"))
+
+vec = Vector(debug)
 
 if len(sys.argv) > 1:
     if sys.argv[1] in ["-h", "--help"]:
